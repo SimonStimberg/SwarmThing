@@ -95,7 +95,7 @@ void loop() {
     digitalWrite(1, LOW);   // Turn the LED on (Note that LOW is the voltage level
     
     if(connectionEstablished && !triggered) {
-      char command[] = "left";
+      char command[] = "1";
       
       Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
       Udp.write(command);
