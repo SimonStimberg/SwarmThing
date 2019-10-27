@@ -38,4 +38,5 @@ Connections:
   - digitalWrite(1, LOW); // turns LED on  
   - (if the blink sketch doesnt seem to work, it is possibly because the static variable LED_BUILTIN addresses the wrong connection)
   
-
+- in the Arduino IDE the basic upload settings should work:
+![Connections](assets/ArduinoIDE-UploadSettings.png)
