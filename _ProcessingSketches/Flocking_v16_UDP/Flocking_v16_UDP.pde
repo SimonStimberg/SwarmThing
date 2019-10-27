@@ -7,9 +7,10 @@
 // which implements Craig Reynolds' "Flocking" and "Steering" behavior
 // See: http://www.red3d.com/cwr/
 
-import oscP5.*;
-//import netP5.*;
-OscP5 oscP5;
+// import UDP library
+import hypermedia.net.*;
+
+UDP udp;  // define the UDP object
 
 
 Flock flock;
@@ -25,13 +26,15 @@ boolean debug;
 
 int triggerBoid;
 
-
-
 void setup() {
+  
+  // create a new datagram connection on port 6000
+  // and wait for incomming message
+  udp = new UDP( this, 6000 );
+  //udp.log( true );     // <-- printout the connection activity
+  udp.listen( true );
 
-  size(1300, 1000);
-
-  oscP5 = new OscP5(this, 10000);
+  size(1024, 768);
 
   // define the starting depth, resp. the position of the wave-line
   initDepth = 0.55;  
@@ -45,19 +48,19 @@ void setup() {
 
   // the ground consists of a grid of squares - comparable to "big pixels"
   // which make it much more performative, computing the color changing background
-  int gridSize = 20;
+  int gridSize = 16;
   int cols = width / gridSize;
   int rows = height / gridSize;
   ground = new Ground(cols, rows, gridSize);
 
-  debug = false;
+  debug = true;
   triggerBoid = 0;
 }
 
 
 
 void draw() {
-
+  
   // the boids have to be added during the draw loop and not in the oscEvent function
   // since the osc function works as an interrupt it could break the other functions
   // because if the amount of boids changes while a boid function is in the middle of a run is not good
@@ -66,6 +69,7 @@ void draw() {
     println(" spawn at gate: " + triggerBoid);
     triggerBoid = 0;    
   }
+  
 
   adjustDepth();
   ground.update();
@@ -75,7 +79,7 @@ void draw() {
   flock.render();
   drawGate();
   // wall.display();   // display the boundaries for debugging purposes
-
+  
 
   if (debug) {
     fill(0);
@@ -98,25 +102,46 @@ public void keyPressed() {
   if (key == ' ') {
     food.spawn();
   }
-}
-
-public void oscEvent(OscMessage theOscMessage) {
-  /* print the address pattern and the typetag of the received OscMessage */
-  print("### received an osc message.");
-  //print(" addrpattern: "+theOscMessage.addrPattern());
-  //println(" typetag: "+theOscMessage.typetag());
-  
-  // check if the attached message is an integer - otherwise the parsing goes wrong
-  if (theOscMessage.checkTypetag("i")) {
-    triggerBoid = theOscMessage.get(0).intValue();
+  if (key == 'k') {
+    flock.killFlock();
+  }
+  if (key == 'a') {
+    String message  = str( key );  // the message to send
+    String ip       = "192.168.137.115";  // the remote IP address
+    int port        = 6000;    // the destination port
+    
+    // formats the message for Pd
+    //message = message+";\n";
+    // send the message
+    udp.send( message, ip, port );
   }
 }
 
+
+// void receive( byte[] data ) {       // <-- default handler
+void receive( byte[] data, String ip, int port ) {  // <-- extended handler
+  
+  
+  // get the "real" message =
+  // forget the ";\n" at the end <-- !!! only for a communication with Pd !!!
+  // data = subset(data, 0, data.length-2);
+  String message = new String( data );
+  
+  // print the result
+  println( "receive: \""+message+"\" from "+ip+" on port "+port );
+  
+  if(int(message) == 1) {
+    triggerBoid = 1;
+    println("trigger!");
+  }
+}
 
 
 // adjusts the depth according to the amount of boids
 // while smoothly transitioning the water level using a lerp function
 void adjustDepth() {
+  
+  ground.pollution = map(constrain(flock.boids.size(), 0, 300), 0, 300, 0.0, 1.0);
 
   float newDepth = height * constrain(map(flock.boids.size(), 0, 300, initDepth, 0.0), 0.0, initDepth);
 
