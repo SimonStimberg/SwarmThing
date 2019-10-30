@@ -45,8 +45,11 @@ import processing.video.*;
 UDP udp;  // define the UDP object
 Movie mov;
 
-boolean playMovie = false;
+boolean movieIsPlaying = false;
 boolean switcher = false;
+
+PImage matte;
+
 
 
 Flock flock;
@@ -97,6 +100,8 @@ void setup() {
   triggerBoid = 0;
   
   mov = new Movie(this, "lichtspektakel_filmuni.mp4");
+  //mov.frameRate(25);
+  matte = loadImage("maskeTest.png");
   imageMode(CENTER);
 }
 
@@ -104,26 +109,28 @@ void setup() {
 
 void draw() {
   
-  if(switcher && !playMovie) {
-    playMovie = true;
-    switcher = false;
+  if(switcher && !movieIsPlaying) {
     mov.play();
-    flock.removeFlock();    
+    movieIsPlaying = true;
+    flock.removeFlock();
+    switcher = false;        
   }
   
-  if(switcher && playMovie) {
-    playMovie = false;
+  if(switcher && movieIsPlaying) {
+    mov.stop();  
+    movieIsPlaying = false;
     switcher = false;
-    mov.stop();    
   }
   
-  if(!playMovie) {
+  if(!movieIsPlaying) {
     runSimulation();
   } else {    
     playVideo();
   }
   
-
+  // draw matte for mapping
+  // tint(255, 127);   // alpha 50%
+  //image(matte, width * 0.5, height * 0.5);
   
 
   if (debug) {
@@ -188,6 +195,11 @@ public void keyPressed() {
   if (key == 'm') {
     switcher = !switcher;
   }
+  if (keyCode == RIGHT && movieIsPlaying) {
+    mov.jump(mov.time() + 60);
+  }
+  
+  
   if (key == 'a') {
     String message  = str( key );  // the message to send
     String ip       = "192.168.137.115";  // the remote IP address
