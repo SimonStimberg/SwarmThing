@@ -17,7 +17,8 @@ class Ground {
     
     colorMode(HSB, 360, 100, 100);
     c1 = color(189, 100, 66);
-    c2 = color(11, 76, 75);
+    c2 = color(11, 100, 100);
+    colorMode(RGB);
     
     pollution = 0;
 
@@ -33,7 +34,8 @@ class Ground {
     
     colorMode(HSB, 360, 100, 100);
     int hue = int(map(pollution, 0, 1.0, 189, 168));
-    c1 = color(hue, 100, 66);
+    c1 = color(hue, 100, 100);
+    colorMode(RGB);
     
     
     // iterate over the grid and assign color shift values using Perlin Noise
@@ -45,11 +47,15 @@ class Ground {
         float yOff = j*0.01;
         float intensity = noise(xOff, yOff, zOff) * 1.0;
         
-        colorMode(RGB);
+
         color inter = lerpColor(c1, c2, intensity);
+        //colorMode(HSB, 360, 100, 100);
+        //color inter = color(map(intensity, 0.0, 1.0, 189, 11), 100, 100);
+        //colorMode(RGB);
         noStroke();
         fill(inter);
         rect(i*scl, j*scl, scl, scl);
+        
         
       }
     }

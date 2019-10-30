@@ -49,7 +49,7 @@ class Boid {
     acceleration = new PVector(0, 0);
     velocity = new PVector(velX, velY);
     position = new PVector(x, y);
-    r = random(3.0, 6.0);  // size of the boid
+    r = random(4.0, 8.0);  // size of the boid
     maxspeed = random(2.0, 4.0);  // max speed a boid can move
     maxforce = 0.05;
     wandertheta = 0;
@@ -80,7 +80,7 @@ class Boid {
     PVector coh = cohesion(boids);   // Cohesion
 
     // weight these forces
-    sep.mult(1.5);
+    sep.mult(2.0);
     ali.mult(1.0);
     coh.mult(1.0);
 

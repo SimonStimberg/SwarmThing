@@ -16,8 +16,8 @@ class Food {
   void spawn() {
     // spawn the food either on the left or on the right side from the central gateway
     // and assign a random mass property
-    float foodPos = (random(2) < 1) ? random(30, width*0.32) : random(width*0.68, width - 30);
-    stuff.add(new Stuff(foodPos, random(1, 3)));
+    float foodPos = (random(2) < 1) ? random(matteLeft+30, matteLeft+outerColumnWidth+smallGateWidth+innerColumnWidth-30) : random(matteLeft+outerColumnWidth+smallGateWidth+innerColumnWidth+bigGateWidth+30, width - matteRight - 30);
+    stuff.add(new Stuff(foodPos, random(2, 4)));
   }
 
 
@@ -152,11 +152,13 @@ class Stuff {
 
     ellipseMode(CENTER);
     noStroke();
-    float alpha = 200;
+    float alpha = 255;
     if (inDecay) {
       alpha = map(expiration-millis(), decayTime, 0, 255, 0);
     }    
-    fill(200, alpha);
+    colorMode(RGB, 255);
+    fill(255, alpha);
+    
     
     // add a bit movement to the horizontal dimension to create the appearance of floating in the water
     float floating = map(noise(noiseOffset), 0, 1, -10, 10);
