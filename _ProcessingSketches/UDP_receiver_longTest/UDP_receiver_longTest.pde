@@ -18,6 +18,9 @@ import hypermedia.net.*;
 
 UDP udp;  // define the UDP object
 
+    String ip       = "192.168.137.178";  // the remote IP address
+    int port        = 6000;    // the destination port
+
 /**
  * init
  */
@@ -40,8 +43,7 @@ void draw() {;}
 void keyPressed() {
     
     String message  = str( key );	// the message to send
-    String ip       = "192.168.137.178";	// the remote IP address
-    int port        = 6000;		// the destination port
+
     
     // formats the message for Pd
     //message = message+";\n";
@@ -59,7 +61,7 @@ void keyPressed() {
  * sender IP address and his port) can be set like below.
  */
 // void receive( byte[] data ) { 			// <-- default handler
-void receive( byte[] data, String ip, int port ) {	// <-- extended handler
+void receive( byte[] data, String inIp, int inPort ) {	// <-- extended handler
   
   
   // get the "real" message =
@@ -67,6 +69,9 @@ void receive( byte[] data, String ip, int port ) {	// <-- extended handler
   // data = subset(data, 0, data.length-2);
   String message = new String( data );
   
+  ip = inIp;
+  port = inPort;
+  
   // print the result
-  println( "receive: \""+message+"\" from "+ip+" on port "+port );
+  println( "receive: \""+message+"\" from "+inIp+" on port "+inPort + " at " + hour() + ":" + minute() + ":" + second() );
 }
