@@ -46,8 +46,11 @@ import hypermedia.net.*;
 import processing.video.*;
 
 UDP udp;  // define the UDP object
-Movie mov;
+String sendIp       = "192.168.137.178";  // the remote IP address
+int sendPort        = 6000;    // the destination port
 
+
+Movie mov;
 boolean movieIsPlaying = false;
 boolean switcher = false;
 
@@ -64,7 +67,6 @@ Food food;
 float depth;
 float initDepth;
 
-boolean debug;
 
 boolean triggerBoid;
 boolean showdown;
@@ -73,6 +75,7 @@ int simDuration = 3;  // duration of simulation in min.
 int simEnd;   // timestamp when to end the simulation
 
 
+boolean debug;
 
 
 
@@ -80,7 +83,7 @@ void setup() {
 
   // create a new datagram connection on port 6000
   // and wait for incomming message
-  udp = new UDP( this, 6000 );
+  udp = new UDP( this, 9000 );
   //udp.log( true );     // <-- printout the connection activity
   udp.listen( true );
 
@@ -228,16 +231,12 @@ public void keyPressed() {
     mov.jump(mov.time() + 60);
   }
 
-
+  // sends a UDP message to sensor to see if its still alive
   if (key == 'a') {
-    String message  = str( key );  // the message to send
-    String ip       = "192.168.137.20";  // the remote IP address
-    int port        = 6000;    // the destination port
+    String message  = str( key );  // the dummy message to send
 
-    // formats the message for Pd
-    //message = message+";\n";
     // send the message
-    udp.send( message, ip, port );
+    udp.send( message, sendIp, sendPort );
   }
 }
 
@@ -245,11 +244,10 @@ public void keyPressed() {
 // void receive( byte[] data ) {       // <-- default handler
 void receive( byte[] data, String ip, int port ) {  // <-- extended handler
 
-
-  // get the "real" message =
-  // forget the ";\n" at the end <-- !!! only for a communication with Pd !!!
-  // data = subset(data, 0, data.length-2);
   String message = new String( data );
+  // cange the send IP+port to the ones received
+  sendIp = ip;
+  sendPort = port;
 
   // print the result
   println( "receive: \""+message+"\" from "+ip+" on port "+port );
