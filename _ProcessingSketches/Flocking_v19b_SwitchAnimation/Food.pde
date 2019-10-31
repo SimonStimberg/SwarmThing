@@ -6,10 +6,22 @@ class Food {
 
   ArrayList<Stuff> stuff;
   float liquidDrag = 0.9;
+  
+  int foodIntervall;
+  int minTime;
+  int maxTime;
 
 
-  Food() {
+  Food(int min, int max) {
     stuff = new ArrayList<Stuff>(); // An arraylist to store the single food objects
+    minTime = min;
+    maxTime = max;
+    
+    timeNextDrop();    
+  }
+  
+  void timeNextDrop() {
+    foodIntervall = millis() + int(random(minTime, maxTime))*1000;
   }
 
 
@@ -23,6 +35,11 @@ class Food {
 
   void update(Waves w) {
     vanish(); // remove food from the list that has been eaten up
+    
+    if (foodIntervall < millis()) {
+      spawn();
+      timeNextDrop();
+    }
 
     for (Stuff s : stuff) {
 

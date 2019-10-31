@@ -71,7 +71,7 @@ float initDepth;
 boolean triggerBoid;
 boolean showdown;
 
-int simDuration = 3;  // duration of simulation in min. 
+int simDuration = 15;  // duration of simulation in min. 
 int simEnd;   // timestamp when to end the simulation
 
 
@@ -96,7 +96,7 @@ void setup() {
   depth = height;
 
   // initialize all elements
-  food = new Food();
+  food = new Food(20, 50);   // parameters: seconds in between to spawn 
   waves = new Waves();  
   newWall();
   flock = new Flock();
@@ -146,6 +146,7 @@ void draw() {
     movieIsPlaying = false;
     depth = height;
     simEnd = millis() + simDuration * 60000;
+    food.timeNextDrop();
     triggerBoid = true;
     switcher = false;
   }
@@ -272,7 +273,7 @@ void adjustDepth() {
     //}
     newDepth = height * map(constrain(flock.boids.size(), 0, 300), 0, 300, 1.1, 0.1);
   } else {
-    newDepth = height * constrain(map(flock.boids.size(), 0, 300, initDepth, 0.1), 0.1, initDepth);
+    newDepth = height * constrain(map(flock.boids.size(), 0, 200, initDepth, 0.1), 0.1, initDepth);
   }
 
   // only lerp, if depth differs from the newDepth
