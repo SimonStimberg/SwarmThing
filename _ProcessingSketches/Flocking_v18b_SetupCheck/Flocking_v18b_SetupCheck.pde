@@ -10,8 +10,8 @@
 
 
 // Adjustable dimensions
-int matteLeft = 180;
-int matteRight = 180;
+int matteLeft = 0;
+int matteRight = 0;
 
 int outerColumnWidth = 228;  // 14,6% from building width (= total width - matte left&right)
 int innerColumnWidth = 167;  // 10,7%
@@ -76,8 +76,8 @@ void setup() {
   //udp.log( true );     // <-- printout the connection activity
   udp.listen( true );
 
-  size(1920, 1200);
-  //fullScreen(2);
+  //size(1600, 1200);
+  fullScreen(2);
 
   // define the starting depth, resp. the position of the wave-line
   initDepth = 0.55;  
@@ -99,9 +99,9 @@ void setup() {
   debug = true;
   triggerBoid = 0;
   
-  mov = new Movie(this, "lichtspektakel_filmuni.mp4");
+  mov = new Movie(this, "lichtspektakel_filmuni_B_01_phje.mov");
   //mov.frameRate(25);
-  matte = loadImage("maskeTest.png");
+  matte = loadImage("maskeBt.png");
   imageMode(CENTER);
 }
 
@@ -130,7 +130,7 @@ void draw() {
   
   // draw matte for mapping
   // tint(255, 127);   // alpha 50%
-  //image(matte, width * 0.5, height * 0.5);
+  image(matte, width * 0.5, height * 0.5);
   
 
   if (debug) {
@@ -161,7 +161,7 @@ void runSimulation() {
   food.update(waves);
   flock.update();
   flock.render();
-  drawGate();
+  //drawGate();
    //wall.display();   // display the boundaries for debugging purposes
 }
 
@@ -202,7 +202,7 @@ public void keyPressed() {
   
   if (key == 'a') {
     String message  = str( key );  // the message to send
-    String ip       = "192.168.137.115";  // the remote IP address
+    String ip       = "192.168.137.20";  // the remote IP address
     int port        = 6000;    // the destination port
     
     // formats the message for Pd
