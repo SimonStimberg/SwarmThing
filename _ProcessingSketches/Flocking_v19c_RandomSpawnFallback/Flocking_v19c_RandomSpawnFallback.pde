@@ -99,7 +99,7 @@ void setup() {
   food = new Food(20, 50);   // parameters: seconds in between to spawn 
   waves = new Waves();  
   newWall();
-  flock = new Flock(5, 20);
+  flock = new Flock(10, 40);
 
   // the ground consists of a grid of squares - comparable to "big pixels"
   // which make it much more performative, computing the color changing background
