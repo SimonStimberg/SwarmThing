@@ -25,11 +25,10 @@ class Flock {
 
   void update() {
     
-    // fall back function for random boid spawn
-    //if (spawnInterval < millis()) {
-    //  addBoid();
-    //  nextSpawn();
-    //}
+    if (spawnInterval < millis()) {
+      addBoid();
+      nextSpawn();
+    }
     
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually

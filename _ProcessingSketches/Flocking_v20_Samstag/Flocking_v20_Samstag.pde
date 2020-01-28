@@ -10,19 +10,19 @@
 
 
 // Adjustable dimensions
-int matteLeft = 54;
-int matteRight = 72;
+int matteLeft = 244;
+int matteRight = 68;
 
-int outerColumnWidth = 226;  // 14,6% from building width (= total width - matte left&right)
-int smallGateWidth = 191;    // 12,4%
-int innerColumnWidth = 154;  // 10,7%
-int bigGateWidth = 360;      // 24,6%
-int innerColumn2Width = 157;
-int smallGate2Width = 176;
-int outerColumn2Width = 210;
+int outerColumnWidth = 120;  // 14,6% from building width (= total width - matte left&right)
+int smallGateWidth = 83;    // 12,4%
+int innerColumnWidth = 82;  // 10,7%
+int bigGateWidth = 164;      // 24,6%
+int innerColumn2Width = 83;
+int smallGate2Width = 80;
+int outerColumn2Width = 100;
 
-int smallGateHeight = 344;   // 32,3% from total height
-int bigGateHeight = 650;     // 60,0%
+int smallGateHeight = 206;   // 32,3% from total height
+int bigGateHeight = 357;     // 60,0%
 
 
 
@@ -71,7 +71,7 @@ float initDepth;
 boolean triggerBoid;
 boolean showdown;
 
-int simDuration = 15;  // duration of simulation in min. 
+int simDuration = 4;  // duration of simulation in min. 
 int simEnd;   // timestamp when to end the simulation
 
 
@@ -87,9 +87,9 @@ void setup() {
   //udp.log( true );     // <-- printout the connection activity
   udp.listen( true );
 
-  size(1600, 1200);
+  //size(1024, 768);
   background(0);
-  //fullScreen(2);
+  fullScreen(2);
 
   // define the starting depth, resp. the position of the wave-line
   initDepth = 0.6;  
@@ -99,11 +99,11 @@ void setup() {
   food = new Food(20, 50);   // parameters: seconds in between to spawn 
   waves = new Waves();  
   newWall();
-  flock = new Flock();
+  flock = new Flock(10, 40);
 
   // the ground consists of a grid of squares - comparable to "big pixels"
   // which make it much more performative, computing the color changing background
-  int gridSize = 10;
+  int gridSize = 8;
   int cols = width / gridSize;
   int rows = height / gridSize;
   ground = new Ground(cols, rows, gridSize);
@@ -112,9 +112,9 @@ void setup() {
   triggerBoid = true;
   showdown = false;
 
-  mov = new Movie(this, "lichtspektakel_filmuni.mp4");
+  mov = new Movie(this, "bt_neu.mp4");
   //mov.frameRate(25);
-  matte = loadImage("maskeBt.png");
+  matte = loadImage("maskeBTxga.png");
   imageMode(CENTER);
   simEnd = millis() + simDuration * 60000;
 }
@@ -271,9 +271,9 @@ void adjustDepth() {
     //if (flock.boids.size() < 1) {
     //  newDepth = height;
     //}
-    newDepth = height * map(constrain(flock.boids.size(), 0, 300), 0, 300, 1.1, 0.1);
+    newDepth = height * map(constrain(flock.boids.size(), 0, 300), 0, 300, 1.1, 0.22);
   } else {
-    newDepth = height * constrain(map(flock.boids.size(), 0, 200, initDepth, 0.1), 0.1, initDepth);
+    newDepth = height * constrain(map(flock.boids.size(), 0, 200, initDepth, 0.22), 0.22, initDepth);
   }
 
   // only lerp, if depth differs from the newDepth
@@ -284,8 +284,8 @@ void adjustDepth() {
 
     // also adjust the boundaries for boid behavior
     int mode = 0;
-    if (depth < 575) mode = 1;  
-    if (depth < 375) mode = 2;  
+    if (depth < 430) mode = 1;  
+    if (depth < 300) mode = 2;  
     wall.adjustWall(depth, mode);
   }
 }
@@ -328,7 +328,7 @@ void newWall() {
 
   wall = new Wall();
 
-  float offset = 30; // defines the amount of smoothness
+  float offset = 15; // defines the amount of smoothness
 
   int innerWidth = width - matteLeft - matteRight;
 
@@ -345,6 +345,7 @@ void newWall() {
   int smallGate_Y = height-smallGateHeight;
   int bigGate_Y = height-bigGateHeight;
 
+  int maskYend = height-42;
 
 
 
@@ -359,36 +360,36 @@ void newWall() {
 
   wall.addPoint(rightEnd-offset, 0+depth+65);
   wall.addPoint(rightEnd, offset+depth+65); 
-  wall.addPoint(rightEnd, height-offset);
-  wall.addPoint(rightEnd-offset, height);
+  wall.addPoint(rightEnd, maskYend-offset);
+  wall.addPoint(rightEnd-offset, maskYend);
 
-  wall.addPoint(column4_X+offset, height);
-  wall.addPoint(column4_X, height-offset);
+  wall.addPoint(column4_X+offset, maskYend);
+  wall.addPoint(column4_X, maskYend-offset);
   wall.addPoint(column4_X, smallGate_Y+offset*2);
   wall.addPoint(column4_X-offset*2, smallGate_Y);
   wall.addPoint(gate3_X+offset*2, smallGate_Y);
   wall.addPoint(gate3_X, smallGate_Y+offset*2);
-  wall.addPoint(gate3_X, height-offset);
-  wall.addPoint(gate3_X-offset, height);
+  wall.addPoint(gate3_X, maskYend-offset);
+  wall.addPoint(gate3_X-offset, maskYend);
 
-  wall.addPoint(column3_X+offset, height);
-  wall.addPoint(column3_X, height-offset);
+  wall.addPoint(column3_X+offset, maskYend);
+  wall.addPoint(column3_X, maskYend-offset);
   wall.addPoint(column3_X, bigGate_Y+offset*3);
   wall.addPoint(column3_X-offset*3, bigGate_Y);
   wall.addPoint(gate2_X+offset*3, bigGate_Y);
   wall.addPoint(gate2_X, bigGate_Y+offset*3);
-  wall.addPoint(gate2_X, height-offset);
-  wall.addPoint(gate2_X-offset, height);
+  wall.addPoint(gate2_X, maskYend-offset);
+  wall.addPoint(gate2_X-offset, maskYend);
 
-  wall.addPoint(column2_X+offset, height);
-  wall.addPoint(column2_X, height-offset);
+  wall.addPoint(column2_X+offset, maskYend);
+  wall.addPoint(column2_X, maskYend-offset);
   wall.addPoint(column2_X, smallGate_Y+offset*2);
   wall.addPoint(column2_X-offset*2, smallGate_Y);
   wall.addPoint(gate1_X+offset*2, smallGate_Y);
   wall.addPoint(gate1_X, smallGate_Y+offset*2);
-  wall.addPoint(gate1_X, height-offset);
-  wall.addPoint(gate1_X-offset, height);
+  wall.addPoint(gate1_X, maskYend-offset);
+  wall.addPoint(gate1_X-offset, maskYend);
 
-  wall.addPoint(column1_X+offset, height);
-  wall.addPoint(column1_X, height-offset);
+  wall.addPoint(column1_X+offset, maskYend);
+  wall.addPoint(column1_X, maskYend-offset);
 }

@@ -46,7 +46,7 @@ import hypermedia.net.*;
 import processing.video.*;
 
 UDP udp;  // define the UDP object
-String sendIp       = "192.168.137.178";  // the remote IP address
+String sendIp       = "192.168.4.1";  // the remote IP address
 int sendPort        = 6000;    // the destination port
 
 
@@ -83,7 +83,7 @@ void setup() {
 
   // create a new datagram connection on port 6000
   // and wait for incomming message
-  udp = new UDP( this, 9000 );
+  udp = new UDP( this, 6000 );
   //udp.log( true );     // <-- printout the connection activity
   udp.listen( true );
 
@@ -99,11 +99,11 @@ void setup() {
   food = new Food(20, 50);   // parameters: seconds in between to spawn 
   waves = new Waves();  
   newWall();
-  flock = new Flock();
+  flock = new Flock(10, 40);
 
   // the ground consists of a grid of squares - comparable to "big pixels"
   // which make it much more performative, computing the color changing background
-  int gridSize = 10;
+  int gridSize = 20;
   int cols = width / gridSize;
   int rows = height / gridSize;
   ground = new Ground(cols, rows, gridSize);

@@ -87,9 +87,9 @@ void setup() {
   //udp.log( true );     // <-- printout the connection activity
   udp.listen( true );
 
-  size(1600, 1200);
+  //size(1600, 1200);
   background(0);
-  //fullScreen(2);
+  fullScreen(2);
 
   // define the starting depth, resp. the position of the wave-line
   initDepth = 0.6;  
@@ -112,7 +112,7 @@ void setup() {
   triggerBoid = true;
   showdown = false;
 
-  mov = new Movie(this, "lichtspektakel_filmuni.mp4");
+  mov = new Movie(this, "lichtspektakel_filmuni_B_01_phje.mov");
   //mov.frameRate(25);
   matte = loadImage("maskeBt.png");
   imageMode(CENTER);
