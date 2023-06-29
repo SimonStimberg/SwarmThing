@@ -1,11 +1,10 @@
-by Simon Stimberg  
+# Schwarmpräsenz
+Simon Stimberg 2019  
+Interactive Projection Mapping
+(Swarm Behaviour Simulation - Sensors)
 
-MA Creative Technologies  
-Procedural Generation and Simulation SS 2019  
-*Final Project*
-
-
-# Project Description
+@Lichtspektakel Potsdam, 2019:  
+https://vimeo.com/387821884
 
 ## Artistic Intention
 The project is intended as an interactive projection on the Brandenburger Tor in Potsdam.  
